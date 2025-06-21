@@ -170,7 +170,11 @@ class Login extends StatelessWidget {
                                               value.trim().isEmpty) {
                                             return 'البريد الإلكتروني مطلوب';
                                           }
-
+                                          if (!RegExp(
+                                            r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                                          ).hasMatch(value)) {
+                                            return 'صيغة البريد الإلكتروني غير صحيحة';
+                                          }
                                           return null;
                                         },
                                       ),

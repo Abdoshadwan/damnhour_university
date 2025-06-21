@@ -41,7 +41,11 @@ class AdminProfile extends StatelessWidget {
     phoneController.text = cubit.profilemodel?.phone ?? '01111111111';
     ScreenSize.initscreensize(context);
     return BlocConsumer<UniversityCubit, UniversityStates>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state is UpdateProfileInfoSuccessState) {
+          showtoast(message: 'تم التحديث بنجاح', color: Colors.green);
+        }
+      },
       builder:
           (context, state) => Scaffold(
             backgroundColor: primary_blue,
@@ -90,17 +94,25 @@ class AdminProfile extends StatelessWidget {
                       Stack(
                         alignment: AlignmentDirectional.bottomEnd,
                         children: [
-                          Container(
-                            width: ScreenSize.width * 0.2,
-                            height: ScreenSize.width * 0.2,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                image: cubit.profileImageProvider,
-                                fit: BoxFit.fill,
+                          state is! UpdateProfileInfoLoadingState
+                              ? Container(
+                                width: ScreenSize.width * 0.2,
+                                height: ScreenSize.width * 0.2,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                    image: cubit.profileImageProvider,
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                              )
+                              : Container(
+                                width: ScreenSize.width * 0.2,
+                                height: ScreenSize.width * 0.2,
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
                               ),
-                            ),
-                          ),
                           InkWell(
                             child: Container(
                               height: ScreenSize.width * 0.06,

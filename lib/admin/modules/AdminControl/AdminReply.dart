@@ -28,6 +28,7 @@ class AdminReply extends StatelessWidget {
     return BlocConsumer<UniversityCubit, UniversityStates>(
       listener: (context, state) {
         if (state is updateS_CSuccessState) {
+          UniversityCubit.get(context).getComplaintsAndSuggestions();
           showtoast(message: 'تم التحديث بنجاح', color: Colors.green);
           navigatet_close(context: context, to: AdminLayout());
           cubit.resetselectedstatus();
