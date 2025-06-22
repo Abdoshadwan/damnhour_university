@@ -270,38 +270,42 @@ class AdminControl extends StatelessWidget {
                               : Colors.green,
                     ),
                     SizedBox(width: .035 * ScreenSize.width),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            TextCairo(
-                              text: model.created_at ?? '',
-                              color: brand,
-                              fontsize: 14.0,
-                              fontweight: FontWeight.w400,
-                            ),
-                            SizedBox(width: .018 * ScreenSize.width),
-                            Container(
-                              alignment: Alignment.centerRight,
-                              width: .25 * ScreenSize.width,
-                              child: TextCairo(
-                                text: getTwoPartName(model.user?.username),
-                                color: primary_blue,
+                    Flexible(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              TextCairo(
+                                text: model.created_at ?? '',
+                                color: brand,
                                 fontsize: 14.0,
                                 fontweight: FontWeight.w400,
                               ),
-                            ),
-                          ],
-                        ),
-                        TextCairo(
-                          text: model.user?.faculty ?? '',
-                          color: accent_orange,
-                          fontsize: 10.0,
-                          fontweight: FontWeight.w400,
-                        ),
-                      ],
+                              SizedBox(width: .018 * ScreenSize.width),
+                              Flexible(
+                                child: Container(
+                                  alignment: Alignment.centerRight,
+                                  width: .25 * ScreenSize.width,
+                                  child: TextCairo(
+                                    text: getTwoPartName(model.user?.username),
+                                    color: primary_blue,
+                                    fontsize: 14.0,
+                                    fontweight: FontWeight.w400,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          TextCairo(
+                            text: model.user?.faculty ?? '',
+                            color: accent_orange,
+                            fontsize: 10.0,
+                            fontweight: FontWeight.w400,
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
