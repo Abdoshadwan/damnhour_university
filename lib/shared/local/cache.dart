@@ -22,6 +22,10 @@ class Cache_Helper {
     return sharedpreferences?.get(key);
   }
 
+  static int? get_saved_int({required String key}) {
+    return sharedpreferences?.getInt(key);
+  }
+
   static Future<bool?> removedata({required String key}) async {
     return await sharedpreferences?.remove(key);
   }
