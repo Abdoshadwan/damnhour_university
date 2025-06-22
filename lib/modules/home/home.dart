@@ -158,28 +158,43 @@ class HomeScreen extends StatelessWidget {
                 listener: (context, state) {},
                 builder: (context, state) {
                   var cubit = UniversityCubit.get(context);
-
-                  if (cubit.searchedPosts.isNotEmpty) {
-                    return ListView.separated(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemBuilder:
-                          (context, index) => buildPostItemForHome(
-                            context,
-                            cubit.searchedPosts[index],
-                          ),
-                      separatorBuilder:
-                          (context, index) => Padding(
-                            padding: EdgeInsetsDirectional.symmetric(
-                              vertical: ScreenSize.height * 0.02,
+                  if (searchController.text.isNotEmpty) {
+                    if (cubit.searchedPosts.isNotEmpty) {
+                      return ListView.separated(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemBuilder:
+                            (context, index) =>
+                            buildPostItemForHome(
+                              context,
+                              cubit.searchedPosts[index],
                             ),
-                            child: Container(height: 1, color: brandColor25),
+                        separatorBuilder:
+                            (context, index) =>
+                            Padding(
+                              padding: EdgeInsetsDirectional.symmetric(
+                                vertical: ScreenSize.height * 0.02,
+                              ),
+                              child: Container(height: 1, color: brandColor25),
+                            ),
+                        itemCount: cubit.searchedPosts.length,
+                      );
+                    }
+                    else {
+                      return Padding(
+                        padding: EdgeInsetsDirectional.only(
+                          top: ScreenSize.height * 0.02,
+                        ),
+                        child: Center(
+                          child: TextCairo(
+                            text: 'لا يوجد تطابق لنتيجة البحث',
+                            color: accent_orange,
                           ),
-                      itemCount: cubit.searchedPosts.length,
-                    );
+                        ),
+                      );
+                    }
                   }
-
-                  if (state is GetAllComplaintsAndSuggestionsLoadingState) {
+                  if (!cubit.isLoading) {
                     return ListView.separated(
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
