@@ -48,8 +48,9 @@ class Dio_Helper {
     return dio.put(url, queryParameters: query, data: data);
   }
 
-  static Future<Response> delete({required String url, String? token}) async {
+  static Future<Response> delete({required String url, String? token,   Map<String, dynamic>? query,
+  }) async {
     dio.options.headers = {'Authorization': token};
-    return dio.delete(url);
+    return dio.delete(url ,queryParameters: query);
   }
 }

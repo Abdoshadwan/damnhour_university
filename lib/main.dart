@@ -41,8 +41,10 @@ void main() async {
                     ..getComplaintsAndSuggestions()
                     ..getprofileinfo()
                     ..getUserComplaintsAndSuggestions()
+
                     ..filterPostsBySector('الكل')
-                    ..getUserReactions(),
+                    ..getUserReactions() ..getNotifications()
+
         ),
 
         BlocProvider<LoginCubit>(
