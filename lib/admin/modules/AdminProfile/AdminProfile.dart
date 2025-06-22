@@ -45,6 +45,9 @@ class AdminProfile extends StatelessWidget {
         if (state is UpdateProfileInfoSuccessState) {
           showtoast(message: 'تم التحديث بنجاح', color: Colors.green);
         }
+        if (state is UpdateProfileInfoErrorState) {
+          showtoast(message: 'برجاء المحاوله مره اخرى', color: Colors.red);
+        }
       },
       builder:
           (context, state) => Scaffold(

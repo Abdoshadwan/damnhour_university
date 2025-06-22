@@ -23,6 +23,7 @@ void main() async {
 
   await Cache_Helper.Init();
   token = Cache_Helper.get_saved(key: 'token') ?? 'null';
+  userId = Cache_Helper.get_saved(key: 'userId') ?? 'null';
   Widget home;
   if (token == 'null') {
     home = OnBoarding();
@@ -40,7 +41,8 @@ void main() async {
                     ..getComplaintsAndSuggestions()
                     ..getprofileinfo()
                     ..getUserComplaintsAndSuggestions()
-                    ..filterPostsBySector('الكل'),
+                    ..filterPostsBySector('الكل')
+                    ..getUserReactions(),
         ),
 
         BlocProvider<LoginCubit>(

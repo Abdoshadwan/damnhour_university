@@ -57,7 +57,7 @@ class HelpCenter extends StatelessWidget {
                               color: Colors.white,
                             ),
                             TextCairo(
-                              text: cubit.profilemodel!.faculty??'',
+                              text: cubit.profilemodel!.faculty ?? '',
                               fontweight: FontWeight.w600,
                               fontsize: 14.0,
                               color: Colors.white,
@@ -75,7 +75,7 @@ class HelpCenter extends StatelessWidget {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               image: DecorationImage(
-                                image:  cubit.profileImageProvider,
+                                image: cubit.profileImageProvider,
                                 fit: BoxFit.fill,
                               ),
                             ),
@@ -95,12 +95,12 @@ class HelpCenter extends StatelessWidget {
                                 size: ScreenSize.width * 0.04,
                               ),
                             ),
-                            onTap: (){
+                            onTap: () {
                               cubit.updateProfileImage();
                             },
                           ),
                         ],
-                      )
+                      ),
                     ],
                   ),
                 ),

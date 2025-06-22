@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:damnhour_university/admin/modules/AdminControl/Admincontrol.dart';
 import 'package:damnhour_university/admin/modules/AdminHome/AdminHome.dart';
 import 'package:damnhour_university/admin/modules/AdminProfile/AdminProfile.dart';
+import 'package:damnhour_university/models/getuserlikesModel.dart';
 import 'package:damnhour_university/models/home_model.dart';
 import 'package:damnhour_university/models/getprofile_info.dart';
 import 'package:damnhour_university/models/submit_S_C.dart';
@@ -801,45 +802,185 @@ class UniversityCubit extends Cubit<UniversityStates> {
 
   /////////////////////like and dislike////////////////////////////
 
-  void changelike(ItemModel model) {
-    model.islike = !model.islike;
-    model.isdislike = false;
+  Future<void> changelike(ItemModel model) async {
+    emit(changelikedislikeState());
+    getUserReactions();
+    final reactionId = getReactionIdByPostanduser(model.id, userId);
+
+    if (reactionId != null) {
+      final existingReaction = userlikes!.firstWhere(
+        (r) => r.id == reactionId && r.S_cId == model.id && r.user == userId,
+      );
+
+      if (existingReaction.type == 'لا يعجبني') {
+        updateReaction(postId: model.id, userId: userId, isLike: true);
+        model.islike = true;
+        model.isdislike = false;
+
+        model.like_count = (model.like_count ?? 0) + 1;
+        model.dislike_count =
+            ((model.dislike_count ?? 0) - 1).clamp(0, double.infinity).toInt();
+      } else if (existingReaction.type == 'اعجبني') {
+        // اضغط مرة تانية لإلغاء اللايك
+        removeReaction(model.id, userId);
+        model.islike = false;
+
+        model.like_count =
+            ((model.like_count ?? 0) - 1).clamp(0, double.infinity).toInt();
+      }
+    } else {
+      // أول مرة يدوس لايك
+      addLikeDislike(idofpost: model.id, isLike: true);
+      model.islike = true;
+      model.dislike_count = model.dislike_count; // no change
+      model.like_count = (model.like_count ?? 0) + 1;
+    }
+    getUserReactions();
     emit(changelikedislikeState());
   }
 
-  void changedislike(ItemModel model) {
-    model.isdislike = !model.isdislike;
-    model.islike = false;
+  Future<void> changedisdislike(ItemModel model) async {
+    emit(changelikedislikeState());
+    getUserReactions();
+    final reactionId = getReactionIdByPostanduser(model.id, userId);
+
+    if (reactionId != null) {
+      final existingReaction = userlikes!.firstWhere(
+        (r) => r.id == reactionId && r.S_cId == model.id && r.user == userId,
+      );
+
+      if (existingReaction.type == 'اعجبني') {
+        updateReaction(postId: model.id, userId: userId, isLike: false);
+        model.isdislike = true;
+        model.islike = false;
+
+        model.dislike_count = (model.dislike_count ?? 0) + 1;
+        model.like_count =
+            ((model.like_count ?? 0) - 1).clamp(0, double.infinity).toInt();
+      } else if (existingReaction.type == 'لا يعجبني') {
+        // اضغط مرة تانية لإلغاء الديسلايك
+        removeReaction(model.id, userId);
+        model.isdislike = false;
+
+        model.dislike_count =
+            ((model.dislike_count ?? 0) - 1).clamp(0, double.infinity).toInt();
+      }
+    } else {
+      addLikeDislike(idofpost: model.id, isLike: false);
+      model.isdislike = true;
+      model.like_count = model.like_count; // no change
+      model.dislike_count = (model.dislike_count ?? 0) + 1;
+    }
+    getUserReactions();
     emit(changelikedislikeState());
   }
 
-  void updateLikeDislike({
-    required int? id,
-    required bool isLike,
-    required String? type_S_C, // "شكوى" or "اقتراح"
-    required int newCount,
-  }) async {
-    emit(updateS_CLoadingState());
+  List<UserLikes>? userlikes;
+  void addLikeDislike({required int? idofpost, required bool isLike}) async {
+    emit(addlikeanddislikeloadingState());
 
-    final field = isLike ? 'like_count' : 'dislike_count';
+    final type = isLike ? 'اعجبني' : 'لا يعجبني';
 
-    await Dio_Helper.updateDB(
-          data: {field: newCount},
-          url: type_S_C == 'شكوى' ? 'complaint/$id/' : 'suggestion/$id/',
+    await Dio_Helper.PostinDB(
+          data: {'sc_type': '$idofpost', 'type': '$type'},
+          url: Reactions,
           token: 'Bearer ${token}',
         )
         .then((value) {
-          if (value.data != null && value.data is Map<String, dynamic>) {
-            updates_c_model = updateComplaintModel.fromJson(value.data);
-          } else {
-            print("Invalid or null response data: ${value.data}");
-            return;
+          List<dynamic> jsonList = value.data;
+          if (jsonList.isNotEmpty) {
+            final newReaction = UserLikes.fromJson(jsonList[0]);
+            userlikes ??= [];
+            userlikes!.add(newReaction);
           }
-          emit(updateS_CSuccessState(updates_c_model?.message));
+
+          emit(addlikeanddislikesuccessState());
         })
         .catchError((error) {
           print(error.toString());
-          emit(updateS_CErrorState("Failed to update $field"));
+          emit(addlikeanddislikeerrorState());
         });
   }
+
+  void updateReaction({
+    required int? postId,
+    required int? userId,
+    required bool isLike, // true = اعجبني, false = لا يعجبني
+  }) async {
+    emit(updatereactionloadingState());
+
+    final reactionId = getReactionIdByPostanduser(postId, userId);
+    if (reactionId == null) {
+      print("Reaction not found for post ID $postId and user ID $userId");
+      emit(updatereactionerrorState());
+      return;
+    }
+
+    final type = isLike ? 'اعجبني' : 'لا يعجبني';
+
+    await Dio_Helper.updateDB(
+          url: '$Reactions/$reactionId/',
+          data: {'type': type},
+          token: 'Bearer $token',
+        )
+        .then((value) {
+          print('Reaction updated to $type');
+          emit(updatereactionsuccessState());
+        })
+        .catchError((error) {
+          print('Error while updating reaction: $error');
+          emit(updatereactionerrorState());
+        });
+  }
+
+  void getUserReactions() async {
+    emit(getuserreactionsloadingState());
+
+    await Dio_Helper.getfromDB(url: Reactions, token: 'Bearer $token')
+        .then((value) {
+          List<dynamic> jsonList = value.data;
+          userlikes = jsonList.map((item) => UserLikes.fromJson(item)).toList();
+          emit(getuserreactionssuccessState());
+        })
+        .catchError((error) {
+          print(error.toString());
+          emit(getuserreactionserrorState());
+        });
+  }
+
+  int? getReactionIdByPostanduser(int? postId, int? userId) {
+    try {
+      final reaction = userlikes?.firstWhere(
+        (reaction) => reaction.S_cId == postId && reaction.user == userId,
+      );
+      print("Found reaction: ${reaction?.id}");
+      return reaction?.id;
+    } catch (e) {
+      print("Reaction not found. Error: $e");
+      return null; // if not found
+    }
+  }
+
+  void removeReaction(int? postId, int? userId) async {
+    emit(removereactionloadingState());
+    final reactionId = getReactionIdByPostanduser(postId, userId);
+    if (reactionId == null) {
+      print("Reaction not found for post ID$postId and user id$userId");
+      return;
+    }
+    await Dio_Helper.delete(
+          url: '${Reactions}/$reactionId/',
+          token: 'Bearer $token',
+        )
+        .then((value) {
+          print('Reaction deleted');
+          emit(removereactionsuccessState());
+        })
+        .catchError((error) {
+          print(error.toString());
+          emit(removereactionerrorState());
+        });
+  }
+
+  //////////////////////////////////////////////////Finish Like and Dislike/////////////////////////////////////////////////////////
 }

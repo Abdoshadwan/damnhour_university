@@ -322,6 +322,23 @@ Widget supportRichTextCairo() {
           ),
         ),
         TextSpan(
+          text: 'رقم واتساب: ',
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
+            color: brandColor300,
+          ),
+        ),
+        TextSpan(
+          text: '012111111111\n',
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
+          ),
+        ),
+
+        TextSpan(
           text: 'ساعات العمل: من 9 ص إلى 5 م (أيام العمل الرسمية)',
           style: TextStyle(
             fontWeight: FontWeight.w600,

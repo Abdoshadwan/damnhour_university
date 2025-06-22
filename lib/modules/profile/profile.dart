@@ -23,6 +23,9 @@ class ProfileScreen extends StatelessWidget {
         if (state is UpdateProfileInfoSuccessState) {
           showtoast(message: 'تم التحديث بنجاح', color: Colors.green);
         }
+        if (state is UpdateProfileInfoErrorState) {
+          showtoast(message: 'برجاء المحاوله مره اخرى', color: Colors.red);
+        }
       },
       builder: (context, state) {
         var cubit = UniversityCubit.get(context);
@@ -183,6 +186,9 @@ class ProfileScreen extends StatelessWidget {
                             Cache_Helper.removedata(key: 'token').then((value) {
                               navigatet_close(context: context, to: Login());
                             });
+                            Cache_Helper.removedata(
+                              key: 'userId',
+                            ).then((value) {});
                           },
                         ),
                       ],

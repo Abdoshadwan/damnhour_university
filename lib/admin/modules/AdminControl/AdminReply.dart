@@ -158,7 +158,7 @@ class AdminReply extends StatelessWidget {
                             textDirection: TextDirection.ltr,
                             decoration: InputDecoration(
                               hintText:
-                                  'يجب كتابة رد واضح ووسمي، يوضح الاجراءات المتخذة أو حالة المعالجة.',
+                                  'يجب كتابة رد واضح ورسمي، يوضح الاجراءات المتخذة أو حالة المعالجة.',
                               hintStyle: TextStyle(
                                 color: brandColor200,
                                 fontFamily: 'Cairo',
