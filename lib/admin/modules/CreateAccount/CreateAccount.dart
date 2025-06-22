@@ -1,6 +1,6 @@
 // ignore_for_file: must_be_immutable
 
-import 'package:damnhour_university/admin/modules/AdminProfile/AdminProfile.dart';
+import 'package:damnhour_university/admin/modules/AdminLayout/AdminLayout.dart';
 import 'package:damnhour_university/icons/custom_icons.dart';
 import 'package:damnhour_university/modules/register/cubit/register_cubit.dart';
 import 'package:damnhour_university/modules/register/cubit/register_states.dart';
@@ -27,7 +27,7 @@ class CreateAccount extends StatelessWidget {
         listener: (context, state) {
           if (state is registerSuccessState) {
             showtoast(message: 'تم التسجيل بنجاح', color: Colors.green);
-            navigatet_close(context: context, to: AdminProfile());
+            navigatet_close(context: context, to: AdminLayout());
             print("register success");
           } else if (state is registerErrorState) {
             showtoast(
@@ -55,7 +55,7 @@ class CreateAccount extends StatelessWidget {
                             child: IconButton(
                               onPressed: () {
                                 navigatet_close(
-                                  to: AdminProfile(),
+                                  to: AdminLayout(),
                                   context: context,
                                 );
                               },

@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/widgets.dart';
 
 class ScreenSize {
@@ -15,3 +14,5 @@ class ScreenSize {
 }
 
 String? token = '';
+
+int? userId;

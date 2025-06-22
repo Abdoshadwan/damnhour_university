@@ -22,200 +22,208 @@ class AdminControl extends StatelessWidget {
     return BlocConsumer<UniversityCubit, UniversityStates>(
       listener: (context, state) {},
       builder:
-          (context, state) => Scaffold(
-            backgroundColor: Colors.white,
-            body: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: EdgeInsetsDirectional.only(
-                      top: ScreenSize.height * 0.055,
-                      start: ScreenSize.width * 0.04,
-                      end: ScreenSize.width * 0.04,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: accentColor50,
-                                shape: BoxShape.circle,
-                              ),
-                              child: IconButton(
-                                onPressed: () {
-                                  navigateTo(
-                                    to: AdminNotification(),
-                                    context: context,
-                                  );
-                                },
-                                icon: Icon(
-                                  Icons.notifications_none,
-                                  color: primary_blue,
+          (context, state) => RefreshIndicator(
+            displacement: 10.0,
+            color: Colors.white,
+            backgroundColor: accent_orange,
+            onRefresh: () async {
+              UniversityCubit.get(context).getComplaintsAndSuggestions();
+            },
+            child: Scaffold(
+              backgroundColor: Colors.white,
+              body: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: EdgeInsetsDirectional.only(
+                        top: ScreenSize.height * 0.055,
+                        start: ScreenSize.width * 0.04,
+                        end: ScreenSize.width * 0.04,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: accentColor50,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: IconButton(
+                                  onPressed: () {
+                                    navigateTo(
+                                      to: AdminNotification(),
+                                      context: context,
+                                    );
+                                  },
+                                  icon: Icon(
+                                    Icons.notifications_none,
+                                    color: primary_blue,
+                                  ),
                                 ),
                               ),
-                            ),
-                            Expanded(
-                              child: Column(
-                                // mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.end,
+                              Expanded(
+                                child: Column(
+                                  // mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    TextCairo(
+                                      text: 'جامعة دمنهور',
+                                      color: accent_orange,
+                                      fontweight: FontWeight.w400,
+                                      fontsize: 13.0,
+                                    ),
+                                    TextCairo(
+                                      text: 'صفحة التحكم',
+                                      color: Colors.black,
+                                      fontweight: FontWeight.w500,
+                                      fontsize: 16.0,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(width: 15.0),
+                              Container(
+                                height: 52,
+                                child: Image(
+                                  image: AssetImage("assets/images/logo.png"),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 30),
+                          TextCairo(
+                            text: ' الشكاوي والاقتراحات',
+                            color: Colors.black,
+                            fontsize: 18.0,
+                            fontweight: FontWeight.w500,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 20.0),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: ScreenSize.width * 0.06,
+                      ),
+                      child: Row(
+                        children: [
+                          // Dropdown
+                          dropdownlist(
+                            dropdownitems: [
+                              'معلق',
+                              'قيد التنفيذ',
+                              'تم الحل',
+                              'مرفوض',
+                            ],
+                            hinttext: '',
+                            bordercolor: brandColor200,
+                            onchanged: (value) {
+                              UniversityCubit.get(
+                                context,
+                              ).filterPostsBySectorandstatus(status: value);
+                            },
+                            width: 104,
+                            selectedvalue: selectedvalue,
+                          ),
+                          SizedBox(width: 8),
+                          // Search field
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: brandColor200),
+                                color: Colors.white,
+                              ),
+                              child: Row(
                                 children: [
-                                  TextCairo(
-                                    text: 'جامعة دمنهور',
-                                    color: accent_orange,
-                                    fontweight: FontWeight.w400,
-                                    fontsize: 13.0,
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 20,
+                                    ),
+                                    child: Icon(
+                                      Icons.search,
+                                      color: accentColor100,
+                                    ),
                                   ),
-                                  TextCairo(
-                                    text: 'صفحة التحكم',
-                                    color: Colors.black,
-                                    fontweight: FontWeight.w500,
-                                    fontsize: 16.0,
+                                  Expanded(
+                                    child: TextField(
+                                      keyboardType: TextInputType.number,
+                                      onChanged: (value) {
+                                        print(
+                                          UniversityCubit.get(
+                                            context,
+                                          ).filteredPostsbystatus.length,
+                                        );
+                                        UniversityCubit.get(
+                                          context,
+                                        ).updateSearchId(value);
+                                      },
+                                      // controller: searchcontroller,
+                                      textAlign: TextAlign.center,
+                                      decoration: InputDecoration(
+                                        hintText: "ابحث برقم الشكوى",
+                                        hintStyle: TextStyle(
+                                          color: accentColor100,
+                                          fontFamily: 'Cairo',
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                        border: InputBorder.none,
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
                             ),
-                            SizedBox(width: 15.0),
-                            Container(
-                              height: 52,
-                              child: Image(
-                                image: AssetImage("assets/images/logo.png"),
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 30),
-                        TextCairo(
-                          text: ' الشكاوي والاقتراحات',
-                          color: Colors.black,
-                          fontsize: 18.0,
-                          fontweight: FontWeight.w500,
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 20.0),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: ScreenSize.width * 0.06,
-                    ),
-                    child: Row(
-                      children: [
-                        // Dropdown
-                        dropdownlist(
-                          dropdownitems: [
-                            'معلق',
-                            'قيد التنفيذ',
-                            'تم الحل',
-                            'مرفوض',
-                          ],
-                          hinttext: '',
-                          bordercolor: brandColor200,
-                          onchanged: (value) {
-                            UniversityCubit.get(
-                              context,
-                            ).filterPostsBySectorandstatus(status: value);
-                          },
-                          width: 104,
-                          selectedvalue: selectedvalue,
-                        ),
-                        SizedBox(width: 8),
-                        // Search field
-                        Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: brandColor200),
-                              color: Colors.white,
-                            ),
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 20,
-                                  ),
-                                  child: Icon(
-                                    Icons.search,
-                                    color: accentColor100,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: TextField(
-                                    keyboardType: TextInputType.number,
-                                    onChanged: (value) {
-                                      print(
-                                        UniversityCubit.get(
-                                          context,
-                                        ).filteredPostsbystatus.length,
-                                      );
-                                      UniversityCubit.get(
-                                        context,
-                                      ).updateSearchId(value);
-                                    },
-                                    // controller: searchcontroller,
-                                    textAlign: TextAlign.center,
-                                    decoration: InputDecoration(
-                                      hintText: "ابحث برقم الشكوى",
-                                      hintStyle: TextStyle(
-                                        color: accentColor100,
-                                        fontFamily: 'Cairo',
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.w400,
-                                      ),
-                                      border: InputBorder.none,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
 
-                  SizedBox(height: 30),
-                  Padding(
-                    padding: EdgeInsetsDirectional.only(
-                      end: ScreenSize.width * 0.04,
-                      bottom: ScreenSize.height * 0.02,
-                    ),
-                    child: sectorsListView(
-                      onTap: (String sectorName) {
-                        UniversityCubit.get(
-                          context,
-                        ).filterPostsBySector(sectorName);
-                      },
-                    ), //=>
-                  ),
-                  Container(height: 1.0, color: brandColor25),
-                  ListView.separated(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemBuilder:
-                        (context, index) => buildPostItem(
-                          context,
+                    SizedBox(height: 30),
+                    Padding(
+                      padding: EdgeInsetsDirectional.only(
+                        end: ScreenSize.width * 0.04,
+                        bottom: ScreenSize.height * 0.02,
+                      ),
+                      child: sectorsListView(
+                        onTap: (String sectorName) {
                           UniversityCubit.get(
                             context,
-                          ).filteredPostsbystatus[index],
-                          cubit,
-                        ),
-                    separatorBuilder:
-                        (context, index) => Padding(
-                          padding: EdgeInsetsDirectional.symmetric(
-                            vertical: ScreenSize.height * 0.02,
+                          ).filterPostsBySector(sectorName);
+                        },
+                      ), //=>
+                    ),
+                    Container(height: 1.0, color: brandColor25),
+                    ListView.separated(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemBuilder:
+                          (context, index) => buildPostItem(
+                            context,
+                            UniversityCubit.get(
+                              context,
+                            ).filteredPostsbystatus[index],
+                            cubit,
                           ),
-                          // child: Container(height: 1, color: brandColor25),
-                        ),
-                    itemCount:
-                        UniversityCubit.get(
-                          context,
-                        ).filteredPostsbystatus.length,
-                  ),
-                ],
+                      separatorBuilder:
+                          (context, index) => Padding(
+                            padding: EdgeInsetsDirectional.symmetric(
+                              vertical: ScreenSize.height * 0.02,
+                            ),
+                            // child: Container(height: 1, color: brandColor25),
+                          ),
+                      itemCount:
+                          UniversityCubit.get(
+                            context,
+                          ).filteredPostsbystatus.length,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

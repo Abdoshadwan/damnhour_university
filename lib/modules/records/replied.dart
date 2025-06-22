@@ -105,19 +105,12 @@ class Replied extends StatelessWidget {
                             border: Border.all(color: brandColor25),
                           ),
                           child: TextFormField(
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'نص الرد مطلوب';
-                              }
-                              return null;
-                            },
                             textAlign: TextAlign.end,
-                            controller: response,
                             maxLines: 4,
+                            enabled: false,
                             textDirection: TextDirection.ltr,
                             decoration: InputDecoration(
-                              hintText:
-                                  'يجب كتابة رد واضح ووسمي، يوضح الاجراءات المتخذة أو حالة المعالجة.',
+                              hintText: '${response.text}',
                               hintStyle: TextStyle(
                                 color: brandColor200,
                                 fontFamily: 'Cairo',

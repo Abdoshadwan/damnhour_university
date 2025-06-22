@@ -160,3 +160,26 @@ class UpdateNotificationsErrorState extends UniversityStates {
   var error;
   UpdateNotificationsErrorState(this.error);
 }
+class addlikeanddislikeloadingState extends UniversityStates {}
+
+class addlikeanddislikeerrorState extends UniversityStates {}
+
+class addlikeanddislikesuccessState extends UniversityStates {}
+
+class updatereactionloadingState extends UniversityStates {}
+
+class updatereactionsuccessState extends UniversityStates {}
+
+class updatereactionerrorState extends UniversityStates {}
+
+class getuserreactionsloadingState extends UniversityStates {}
+
+class getuserreactionserrorState extends UniversityStates {}
+
+class getuserreactionssuccessState extends UniversityStates {}
+
+class removereactionloadingState extends UniversityStates {}
+
+class removereactionsuccessState extends UniversityStates {}
+
+class removereactionerrorState extends UniversityStates {}

@@ -19,7 +19,14 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<UniversityCubit, UniversityStates>(
-      listener: (context, state) {},
+      listener: (context, state) {
+        if (state is UpdateProfileInfoSuccessState) {
+          showtoast(message: 'تم التحديث بنجاح', color: Colors.green);
+        }
+        if (state is UpdateProfileInfoErrorState) {
+          showtoast(message: 'برجاء المحاوله مره اخرى', color: Colors.red);
+        }
+      },
       builder: (context, state) {
         var cubit = UniversityCubit.get(context);
         return Scaffold(
@@ -47,7 +54,7 @@ class ProfileScreen extends StatelessWidget {
                             color: Colors.white,
                           ),
                           TextCairo(
-                            text: cubit.profilemodel!.faculty ?? '',
+                            text: cubit.profilemodel?.faculty ?? '',
                             fontweight: FontWeight.w600,
                             fontsize: 14.0,
                             color: Colors.white,
@@ -59,17 +66,23 @@ class ProfileScreen extends StatelessWidget {
                     Stack(
                       alignment: AlignmentDirectional.bottomEnd,
                       children: [
-                        Container(
-                          width: ScreenSize.width * 0.2,
-                          height: ScreenSize.width * 0.2,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            image: DecorationImage(
-                              image: cubit.profileImageProvider,
-                              fit: BoxFit.fill,
+                        state is! UpdateProfileInfoLoadingState
+                            ? Container(
+                              width: ScreenSize.width * 0.2,
+                              height: ScreenSize.width * 0.2,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                image: DecorationImage(
+                                  image: cubit.profileImageProvider,
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                            )
+                            : Container(
+                              width: ScreenSize.width * 0.2,
+                              height: ScreenSize.width * 0.2,
+                              child: Center(child: CircularProgressIndicator()),
                             ),
-                          ),
-                        ),
 
                         InkWell(
                           child: Container(
@@ -173,6 +186,9 @@ class ProfileScreen extends StatelessWidget {
                             Cache_Helper.removedata(key: 'token').then((value) {
                               navigatet_close(context: context, to: Login());
                             });
+                            Cache_Helper.removedata(
+                              key: 'userId',
+                            ).then((value) {});
                           },
                         ),
                       ],

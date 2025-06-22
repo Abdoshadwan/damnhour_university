@@ -108,12 +108,12 @@ class OnBoarding extends StatelessWidget {
                                   text:
                                       'لا تدعها تمر بصمت! أبلغ عنها بسهولة، وكن',
                                   color: accent_orange,
-                                  fontsize: 18,
+                                  fontsize: ScreenSize.width > 390 ? 18 : 15,
                                 ),
                                 TextCairo(
                                   text: '.جزءًا من الحل',
                                   color: accent_orange,
-                                  fontsize: 18,
+                                  fontsize: ScreenSize.width > 390 ? 18 : 15,
                                 ),
                                 SizedBox(height: 10),
                                 TextCairo(

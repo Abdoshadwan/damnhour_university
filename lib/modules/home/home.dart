@@ -542,13 +542,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                         child: IconButton(
                           onPressed: () {
-                            cubit.changedislike(model);
-                            cubit.updateLikeDislike(
-                              id: model.id,
-                              isLike: false,
-                              type_S_C: model.sc_type,
-                              newCount: model.dislike_count ?? 0 + 1,
-                            );
+                            cubit.changedisdislike(model);
                           },
                           icon: Icon(
                             Icons.thumb_down_alt_outlined,
@@ -574,12 +568,6 @@ class HomeScreen extends StatelessWidget {
                         child: IconButton(
                           onPressed: () {
                             cubit.changelike(model);
-                            cubit.updateLikeDislike(
-                              id: model.id,
-                              isLike: true,
-                              type_S_C: model.sc_type,
-                              newCount: model.like_count ?? 0 + 1,
-                            );
                           },
                           icon: Icon(
                             Icons.thumb_up_alt_outlined,

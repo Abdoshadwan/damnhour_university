@@ -4,7 +4,7 @@ class LoginModel {
   String? token;
   String? message;
   String? error;
-   UserModel? user;
+  UserModel? user;
 
   LoginModel();
 

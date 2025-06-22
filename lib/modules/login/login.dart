@@ -32,10 +32,17 @@ class Login extends StatelessWidget {
             );
             if (state.model.user?.position == 'مستخدم') {
               Cache_Helper.putdata(
+                key: 'userId',
+                value: userId = state.model.user?.id,
+              ).then((value) {
+                userId = state.model.user?.id;
+              });
+              Cache_Helper.putdata(
                 key: 'token',
                 value: state.model.token,
               ).then((value) {
                 token = state.model.token;
+
                 navigatet_close(
                   to:
                       LoginCubit.get(context).model?.user?.position == 'مستخدم'
@@ -170,7 +177,11 @@ class Login extends StatelessWidget {
                                               value.trim().isEmpty) {
                                             return 'البريد الإلكتروني مطلوب';
                                           }
-
+                                          if (!RegExp(
+                                            r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                                          ).hasMatch(value)) {
+                                            return 'صيغة البريد الإلكتروني غير صحيحة';
+                                          }
                                           return null;
                                         },
                                       ),

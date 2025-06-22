@@ -28,6 +28,7 @@ class AdminReply extends StatelessWidget {
     return BlocConsumer<UniversityCubit, UniversityStates>(
       listener: (context, state) {
         if (state is updateS_CSuccessState) {
+          UniversityCubit.get(context).getComplaintsAndSuggestions();
           showtoast(message: 'تم التحديث بنجاح', color: Colors.green);
           navigatet_close(context: context, to: AdminLayout());
           cubit.resetselectedstatus();
@@ -157,7 +158,7 @@ class AdminReply extends StatelessWidget {
                             textDirection: TextDirection.ltr,
                             decoration: InputDecoration(
                               hintText:
-                                  'يجب كتابة رد واضح ووسمي، يوضح الاجراءات المتخذة أو حالة المعالجة.',
+                                  'يجب كتابة رد واضح ورسمي، يوضح الاجراءات المتخذة أو حالة المعالجة.',
                               hintStyle: TextStyle(
                                 color: brandColor200,
                                 fontFamily: 'Cairo',
