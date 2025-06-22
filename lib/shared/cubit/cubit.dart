@@ -14,6 +14,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../models/notification_model.dart';
 import '../../modules/complaints/complaints.dart';
 import '../../modules/home/home.dart';
 import '../../modules/profile/profile.dart';
@@ -690,7 +691,9 @@ class UniversityCubit extends Cubit<UniversityStates> {
   List<ItemModel> allPosts = []; //كل ال posts
   List<ItemModel> filteredPosts = []; // حسب كل sector
   FeedBackModel? feedBackModel;
+  bool isLoading=false;
   Future<void> getComplaintsAndSuggestions() async {
+    isLoading=false;
     emit(GetAllComplaintsAndSuggestionsLoadingState());
 
     Dio_Helper.getfromDB(url: FEEDBACK, token: 'Bearer $token')
@@ -701,6 +704,7 @@ class UniversityCubit extends Cubit<UniversityStates> {
                 ..sort((a, b) => b.createdAtDate!.compareTo(a.createdAtDate!));
           filteredPosts = allPosts;
           filteredPostsByStatus();
+          isLoading=true;
           emit(GetAllComplaintsAndSuggestionsSuccessState());
         })
         .catchError((error) {
@@ -841,5 +845,50 @@ class UniversityCubit extends Cubit<UniversityStates> {
           print(error.toString());
           emit(updateS_CErrorState("Failed to update $field"));
         });
+  }
+
+  List<NotificationModel> notificationsList = [];
+  void getNotifications() {
+    Dio_Helper.getfromDB(url: NOTIFICATIONS, token: 'Bearer ${token}')
+        .then((value) {
+      notificationsList =
+          (value.data as List)
+              .map((item) => NotificationModel.fromJson(item))
+              .toList();
+      emit(GetNotificationsSuccessState());
+    })
+        .catchError((error) {
+      emit(GetNotificationsErrorState(error.toString()));
+    });
+  }
+
+  void deleteNotification(int id) {
+    notificationsList.removeWhere((item) => item.id == id);
+    emit(DeleteNotificationsLoadingState());
+
+    Dio_Helper.delete(
+
+      url: NOTIFICATIONS,
+      token: 'Bearer $token',
+      query: {'id': id},
+    ).then((value) {
+      getNotifications();
+      notificationsList.removeWhere((item) => item.id == id);
+      emit(DeleteNotificationsSuccessState());
+    }).catchError((error) {
+      emit(DeleteNotificationsErrorState(error.toString()));
+    });
+  }
+
+
+  void updateNotification(int id) {
+    emit(UpdateNotificationsLoadingState());
+    Dio_Helper.updateDB(data: {'id': id}, url: NOTIFICATIONS)
+        .then((value) {
+      emit(UpdateNotificationsSuccessState());
+    })
+        .catchError((error) {
+      emit(UpdateNotificationsErrorState(error.toString()));
+    });
   }
 }

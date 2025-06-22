@@ -139,3 +139,24 @@ class FilterPostsByStatusSuccessState extends UniversityStates {}
 class FilterPostsBySearchState extends UniversityStates {}
 
 class changelikedislikeState extends UniversityStates {}
+
+class GetNotificationsLoadingState extends UniversityStates {}
+class GetNotificationsSuccessState extends UniversityStates {}
+class GetNotificationsErrorState extends UniversityStates {
+  var error;
+  GetNotificationsErrorState(this.error);
+}
+
+class DeleteNotificationsLoadingState extends UniversityStates {}
+class DeleteNotificationsSuccessState extends UniversityStates {}
+class DeleteNotificationsErrorState extends UniversityStates {
+  var error;
+  DeleteNotificationsErrorState(this.error);
+}
+
+class UpdateNotificationsLoadingState extends UniversityStates {}
+class UpdateNotificationsSuccessState extends UniversityStates {}
+class UpdateNotificationsErrorState extends UniversityStates {
+  var error;
+  UpdateNotificationsErrorState(this.error);
+}

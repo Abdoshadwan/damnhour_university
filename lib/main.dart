@@ -40,7 +40,7 @@ void main() async {
                     ..getComplaintsAndSuggestions()
                     ..getprofileinfo()
                     ..getUserComplaintsAndSuggestions()
-                    ..filterPostsBySector('الكل'),
+                    ..filterPostsBySector('الكل')..getNotifications(),
         ),
 
         BlocProvider<LoginCubit>(

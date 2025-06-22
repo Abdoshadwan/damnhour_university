@@ -8,3 +8,4 @@ const FEEDBACK = 'feedback/';
 const getprofile = 'user/profile/';
 const COMPLAINTS = 'complaint/';
 const SUGGESTIONS = 'suggestion/';
+const NOTIFICATIONS = 'notifications/';
